@@ -1,9 +1,9 @@
 package parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by maxtar on 2/10/18.
@@ -13,22 +13,44 @@ class Splitter {
     private Splitter() {
     }
 
-    // TODO DEAL WITH DELIMITERS
-    // Now it works only for equal delimiters (if only one delimiter used in log format)
-    static List<String> split(String oneString, List<Character> delimiters) {
+    static List<String> split(String oneString, List<Character> delimiters, Map<Integer, String> userParams) {
         List<String> splitted = new ArrayList<>();
-        if (delimiters.stream().distinct().limit(2).count() <= 1) {
-            String delimiter = delimiters.get(0).toString();
-            String[] parts = oneString.split(delimiter);
-//        String[] parts = oneString.split(",");
-            Collections.addAll(splitted, parts);
-            List<Integer> positions = checkOnCharsIn(splitted, '[', ']');
-            if (!positions.isEmpty()) {
-                splitted = concatAndRemove(splitted, positions);
+        String addedStr = null;
+        System.out.println(userParams);
+        for (int i = 0; i < delimiters.size(); i++) {
+            String delimiter = delimiters.get(i).toString();
+            String userParam = userParams.get(i);
+
+            if (addedStr != null) {
+                oneString = oneString.substring(addedStr.length() + 1);
             }
-            positions = checkOnCharsIn(splitted, '"', '"');
+            if (userParam != null && oneString.contains(userParam)) {
+                oneString = oneString.substring(userParam.length());
+            }
+
+            String[] parts = oneString.split(delimiter);
+            List<String> helper = new ArrayList<>();
+            Collections.addAll(helper, parts);
+
+            List<Integer> positions = checkOnCharsIn(helper, '[', ']');
             if (!positions.isEmpty()) {
-                splitted = concatAndRemove(splitted, positions);
+                helper = concatAndRemove(helper, positions);
+            }
+            positions = checkOnCharsIn(helper, '"', '"');
+            if (!positions.isEmpty()) {
+                helper = concatAndRemove(helper, positions);
+            }
+            if (!helper.isEmpty()) {
+                addedStr = helper.get(0);
+                splitted.add(addedStr);
+                if (i == delimiters.size() - 1) {
+                    String lastUserParam = userParams.get(i + 1);
+                    if (lastUserParam != null && helper.get(1).contains(lastUserParam)) {
+                        splitted.add(helper.get(1).substring(lastUserParam.length()));
+                    } else {
+                        splitted.add(helper.get(1));
+                    }
+                }
             }
         }
         return splitted;
@@ -44,6 +66,8 @@ class Splitter {
                     if (parts.get(j).charAt(parts.get(j).length() - 1) == symbolClose) {
                         posOfChars.add(j);
                         break;
+                    } else {
+                        posOfChars.remove(posOfChars.size() - 1);
                     }
                 }
             }

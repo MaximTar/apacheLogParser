@@ -10,14 +10,14 @@ public class MaskHandler {
     public static class Parameters {
         private Map<Integer, Character> parameters;
         private Map<Integer, String> additionalParameters;
-        private int parts;
+        private Map<Integer, String> userParameters;
         private List<Character> delimiters;
 
         Parameters(Map<Integer, Character> params, Map<Integer, String> additionalParams,
-                   int parts, List<Character> delimiters) {
+                   Map<Integer, String> userParams, List<Character> delimiters) {
             this.parameters = params;
             this.additionalParameters = additionalParams;
-            this.parts = parts;
+            this.userParameters = userParams;
             this.delimiters = delimiters;
         }
 
@@ -29,8 +29,8 @@ public class MaskHandler {
             return additionalParameters;
         }
 
-        public int getParts() {
-            return parts;
+        public Map<Integer, String> getUserParameters() {
+            return userParameters;
         }
 
         public List<Character> getDelimiters() {
@@ -90,10 +90,17 @@ public class MaskHandler {
     }
 
     public static Parameters getMaskParameters(String mask) {
+
+        if ((mask.startsWith("«") && mask.endsWith("»")) || (mask.startsWith("\"") && mask.endsWith("\""))) {
+            mask = mask.substring(1, mask.length() - 1);
+        }
+
         String[] parts = mask.split("%");
         Map<Integer, Character> maskParameters = new HashMap<>();
         Map<Integer, String> maskAdditionalParameters = new HashMap<>();
+        Map<Integer, String> maskUserParameters = new HashMap<>();
         List<Character> delimiters = new ArrayList<>();
+        maskUserParameters.put(0, parts[0]);
         for (int i = 1; i < parts.length; i++) {
             String part = parts[i];
             int j = 0;
@@ -102,6 +109,9 @@ public class MaskHandler {
             }
             if (j < part.length() && Character.isLetter(part.charAt(j))) {
                 maskParameters.put(i, part.charAt(j));
+                if (i < parts.length - 1) {
+                    maskUserParameters.put(i, part.substring(j + 2));
+                }
                 if (j + 1 < part.length() && i != parts.length - 1) {
                     if (parts[i - 1].length() > 0 && part.charAt(j + 1) != ' ' &&
                             (part.charAt(j + 1) == parts[i - 1].charAt(parts[i - 1].length() - 1) ||
@@ -121,7 +131,7 @@ public class MaskHandler {
                 }
             }
         }
-        return new Parameters(maskParameters, maskAdditionalParameters, parts.length - 1, delimiters);
+        return new Parameters(maskParameters, maskAdditionalParameters, maskUserParameters, delimiters);
     }
 
     static int getKeyByValue(Map<Integer, Character> map, Character value) {

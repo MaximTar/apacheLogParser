@@ -15,7 +15,7 @@
 
     <Label text="Log Format:"
            GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-    <ComboBox fx:id="logFormatComboBox" prefWidth="300.0"
+    <ComboBox fx:id="logFormatComboBox" prefWidth="450"
               GridPane.columnIndex="1" GridPane.rowIndex="0">
         <items>
             <FXCollections fx:factory="observableArrayList"/>
@@ -28,7 +28,7 @@
 
     <Label text="Add New Log Format"
            GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <TextField fx:id="newLogFormatTextField" promptText="New LogFormat"
+    <TextField fx:id="newLogFormatTextField" promptText='New Log Format, e.g. Date: %t, Host: %h, User: %u, File Requested: %r' prefWidth="450"
                GridPane.columnIndex="1" GridPane.rowIndex="1"/>
     <HBox spacing="10" alignment="bottom_right"
           GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -37,7 +37,7 @@
 
     <Label text="Selected Log File:"
            GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <Label fx:id="selectedFile" text="There will be path to selected log file"
+    <Label fx:id="selectedFile" text="There will be path to selected log file" prefWidth="450"
            GridPane.columnIndex="1" GridPane.rowIndex="2"/>
     <HBox spacing="10" alignment="bottom_right"
           GridPane.columnIndex="2" GridPane.rowIndex="2">

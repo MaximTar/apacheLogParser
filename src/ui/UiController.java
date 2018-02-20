@@ -12,6 +12,7 @@ import tableCreator.TableViewCreator;
 
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class UiController {
@@ -23,6 +24,7 @@ public class UiController {
     public Label selectedFile;
     private String savedLogFormatsFileName = "savedLogFormats";
     public TextField newLogFormatTextField;
+    private String commonLogFormat = "%h %l %u %t \"%r\" %>s %b";
 
     @FXML
     protected void handleSelectButtonAction() {
@@ -34,7 +36,7 @@ public class UiController {
         }
     }
 
-    public void fillComboBox() throws IOException {
+    void fillComboBox() throws IOException {
         logFormatComboBox.getItems().clear();
         File savedLogFormatsFile = new File(savedLogFormatsFileName);
         boolean savedLogFormatsFileExists = savedLogFormatsFile.exists();
@@ -43,7 +45,7 @@ public class UiController {
         }
         if (savedLogFormatsFileExists) {
             List<String> logFormats = Reader.readLogFormats(savedLogFormatsFileName);
-            logFormats.add("CLF (\"%h %l %u %t \"%r\" %>s %b\")");
+            logFormats.add(commonLogFormat);
             logFormatComboBox.getItems().addAll(logFormats);
             logFormatComboBox.getSelectionModel().selectFirst();
         } else {
@@ -57,7 +59,7 @@ public class UiController {
 
     public void handleRemoveButtonAction() throws IOException {
         String selectedItem = logFormatComboBox.getSelectionModel().getSelectedItem();
-        if (selectedItem.equals("CLF (\"%h %l %u %t \"%r\" %>s %b\")")) {
+        if (selectedItem.equals(commonLogFormat)) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information");
             alert.setHeaderText(null);
@@ -119,7 +121,8 @@ public class UiController {
             if (MaskHandler.verifyMask(selectedLogFormat)){
                 MaskHandler.Parameters parameters = MaskHandler.getMaskParameters(selectedLogFormat);
                 List<Character> delimiters = parameters.getDelimiters();
-                List<List<String>> logData = Reader.readFile(filePath, delimiters);
+                Map<Integer, String> userParams = parameters.getUserParameters();
+                List<List<String>> logData = Reader.readFile(filePath, delimiters, userParams);
                 Ui.primaryStage.setScene(TableViewCreator.createScene(fileName, logData, parameters));
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
