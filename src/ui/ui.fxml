@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+
+
+<GridPane fx:controller="ui.UiController"
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
+          styleClass="root">
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <Label text="Log Format:"
+           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <ComboBox fx:id="logFormatComboBox" prefWidth="300.0"
+              GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <items>
+            <FXCollections fx:factory="observableArrayList"/>
+        </items>
+    </ComboBox>
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="2" GridPane.rowIndex="0">
+        <Button text="Remove" onAction="#handleRemoveButtonAction" prefWidth="100"/>
+    </HBox>
+
+    <Label text="Add New Log Format"
+           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <TextField fx:id="newLogFormatTextField" promptText="New LogFormat"
+               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="2" GridPane.rowIndex="1">
+        <Button text="Add" onAction="#handleAddButtonAction" prefWidth="100"/>
+    </HBox>
+
+    <Label text="Selected Log File:"
+           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <Label fx:id="selectedFile" text="There will be path to selected log file"
+           GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="2" GridPane.rowIndex="2">
+        <Button text="Select" onAction="#handleSelectButtonAction" prefWidth="100"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="2" GridPane.rowIndex="3">
+        <Button text="Parse" onAction="#handleParseButtonAction" prefWidth="100"/>
+    </HBox>
+
+</GridPane>
