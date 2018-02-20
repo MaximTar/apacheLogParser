@@ -16,7 +16,6 @@ class Splitter {
     static List<String> split(String oneString, List<Character> delimiters, Map<Integer, String> userParams) {
         List<String> splitted = new ArrayList<>();
         String addedStr = null;
-        System.out.println(userParams);
         for (int i = 0; i < delimiters.size(); i++) {
             String delimiter = delimiters.get(i).toString();
             String userParam = userParams.get(i);
@@ -66,7 +65,7 @@ class Splitter {
                     if (parts.get(j).charAt(parts.get(j).length() - 1) == symbolClose) {
                         posOfChars.add(j);
                         break;
-                    } else {
+                    } else if (j == parts.size() - 1) {
                         posOfChars.remove(posOfChars.size() - 1);
                     }
                 }

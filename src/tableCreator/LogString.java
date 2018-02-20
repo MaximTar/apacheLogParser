@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Created by maxtar on 2/12/18.
  */
+@SuppressWarnings("unused")
 public class LogString {
 
     private LogString() {
@@ -308,6 +309,7 @@ public class LogString {
     private SimpleStringProperty bytesReceived = new SimpleStringProperty();
     private SimpleStringProperty bytesSent = new SimpleStringProperty();
 
+    @SuppressWarnings("UnusedReturnValue")
     public class Builder {
 
         private Builder() {

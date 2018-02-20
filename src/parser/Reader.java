@@ -20,7 +20,10 @@ public class Reader {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = br.readLine()) != null) {
-                logData.add(Splitter.split(line, delimiters, userParams));
+                // TODO add line verification
+                if (line.length() > 0) {
+                    logData.add(Splitter.split(line, delimiters, userParams));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

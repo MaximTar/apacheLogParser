@@ -68,6 +68,7 @@ public class MaskHandler {
         return true;
     }
 
+    @SuppressWarnings({"inspection", "BooleanMethodIsAlwaysInverted"})
     private static boolean checkChar(String part, int startChar) {
         for (int k = startChar; k < part.length(); k++) {
             if (Character.isLetter(part.charAt(k))) {
@@ -110,7 +111,17 @@ public class MaskHandler {
             if (j < part.length() && Character.isLetter(part.charAt(j))) {
                 maskParameters.put(i, part.charAt(j));
                 if (i < parts.length - 1) {
-                    maskUserParameters.put(i, part.substring(j + 2));
+                    if (parts[i - 1].length() > 0 && part.charAt(j + 1) != ' ' &&
+                            (part.charAt(j + 1) == parts[i - 1].charAt(parts[i - 1].length() - 1) ||
+                                    (part.charAt(j + 1) == ']' && parts[i - 1].charAt(parts[i - 1].length() - 1) == '[') ||
+                                    (part.charAt(j + 1) == '}' && parts[i - 1].charAt(parts[i - 1].length() - 1) == '{') ||
+                                    (part.charAt(j + 1) == ')' && parts[i - 1].charAt(parts[i - 1].length() - 1) == '(')) &&
+                            j + 2 < part.length()) {
+                        maskUserParameters.put(i, part.substring(j + 3));
+                        maskUserParameters.put(i - 1, maskUserParameters.get(i - 1).substring(0, maskUserParameters.get(i - 1).length() - 1));
+                    } else {
+                        maskUserParameters.put(i, part.substring(j + 2));
+                    }
                 }
                 if (j + 1 < part.length() && i != parts.length - 1) {
                     if (parts[i - 1].length() > 0 && part.charAt(j + 1) != ' ' &&
