@@ -1,27 +1,15 @@
-package tableCreator;
+package main.java.com.github.apachelogparser.controller;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by maxtar on 2/12/18.
  */
 @SuppressWarnings("unused")
-public class LogString {
+class LogString {
 
     private LogString() {
 
-    }
-
-    static ObservableList<LogString> createObservableList(List<List<String>> data, Map<Integer, Character> maskParams) {
-        ObservableList<LogString> observableArrayList = FXCollections.observableArrayList();
-        observableArrayList.addAll(data.stream().map(element -> MaskHandler.buildLogString(maskParams, element)).collect(Collectors.toList()));
-        return observableArrayList;
     }
 
 
@@ -310,7 +298,7 @@ public class LogString {
     private SimpleStringProperty bytesSent = new SimpleStringProperty();
 
     @SuppressWarnings("UnusedReturnValue")
-    public class Builder {
+    class Builder {
 
         private Builder() {
 

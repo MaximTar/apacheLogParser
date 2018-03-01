@@ -1,4 +1,4 @@
-package parser;
+package main.java.com.github.apachelogparser.parser;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,7 +17,8 @@ public class Reader {
 
     public static List<List<String>> readFile(String path, List<Character> delimiters, Map<Integer, String> userParams) {
         List<List<String>> logData = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        try (FileReader fr = new FileReader(path)) {
+            BufferedReader br = new BufferedReader(fr);
             String line;
             while ((line = br.readLine()) != null) {
                 // TODO add line verification
@@ -28,13 +29,13 @@ public class Reader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return logData;
     }
 
     public static List<String> readLogFormats(String path) {
         List<String> logFormats = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        try (FileReader fr = new FileReader(path)) {
+            BufferedReader br = new BufferedReader(fr);
             String line;
             while ((line = br.readLine()) != null) {
                 logFormats.add(line);

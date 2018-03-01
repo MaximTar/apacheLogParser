@@ -1,61 +1,37 @@
-package tableCreator;
+package main.java.com.github.apachelogparser.controller;
 
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.text.Font;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by maxtar on 2/12/18.
- * This class is for making scene with tableView and filling created table with logStrings.
+ * This class is for filling table with logStrings.
  */
-public class TableViewCreator {
+class TableFiller {
 
-    public static Scene createScene(String logName, List<List<String>> data, MaskHandler.Parameters parameters) {
-        TableView<LogString> table = new TableView<>();
-        GridPane pane = new GridPane();
-        Scene scene = new Scene(pane);
+    private TableFiller() {
+    }
 
-        final Label label = new Label("Server Log: " + logName);
-        label.setFont(new Font("Arial", 20));
-        table.setEditable(false);
+
+    static void fillTable(TableViewController controller, ObservableList<LogString> logData, MaskHandler.Parameters parameters) {
 
         Map<Integer, Character> maskParams = parameters.getParameters();
-        ObservableList<LogString> logData = LogString.createObservableList(data, maskParams);
         Map<Integer, String> maskAddParams = parameters.getAdditionalParameters();
         Map<Integer, TableColumn<LogString, String>> tableColumnList = createTableColumnList(maskParams, maskAddParams);
 
-        table.setItems(logData);
+        controller.getTable().setItems(logData);
 
         // FIXME find out correct method
         for (int i = 0; i < tableColumnList.size(); i++) {
-            table.getColumns().add(tableColumnList.get(i + 1));
+            controller.getTable().getColumns().add(tableColumnList.get(i + 1));
         }
         for (int i = 0; i < tableColumnList.size(); i++) {
-            table.getColumns().set(i, tableColumnList.get(i + 1));
+            controller.getTable().getColumns().set(i, tableColumnList.get(i + 1));
         }
-
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        pane.setHgap(5);
-        pane.setVgap(5);
-        pane.setPadding(new Insets(20, 20, 20, 20));
-        pane.add(label, 0, 0);
-        pane.add(table, 0, 1);
-        GridPane.setHgrow(table, Priority.ALWAYS);
-        GridPane.setVgrow(table, Priority.ALWAYS);
-
-        return scene;
     }
 
     private static Map<Integer, TableColumn<LogString, String>> createTableColumnList
@@ -389,6 +365,4 @@ public class TableViewCreator {
         }
         return tableColumnList;
     }
-
-
 }

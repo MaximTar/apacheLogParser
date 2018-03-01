@@ -1,4 +1,4 @@
-package parser;
+package main.java.com.github.apachelogparser.parser;
 
 import java.util.ArrayList;
 import java.util.Collections;

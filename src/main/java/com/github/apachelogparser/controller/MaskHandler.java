@@ -1,13 +1,13 @@
-package tableCreator;
+package main.java.com.github.apachelogparser.controller;
 
 import java.util.*;
 
 /**
  * Created by maxtar on 14.02.18.
  */
-public class MaskHandler {
+class MaskHandler {
 
-    public static class Parameters {
+    static class Parameters {
         private Map<Integer, Character> parameters;
         private Map<Integer, String> additionalParameters;
         private Map<Integer, String> userParameters;
@@ -21,24 +21,24 @@ public class MaskHandler {
             this.delimiters = delimiters;
         }
 
-        public Map<Integer, Character> getParameters() {
+        Map<Integer, Character> getParameters() {
             return parameters;
         }
 
-        public Map<Integer, String> getAdditionalParameters() {
+        Map<Integer, String> getAdditionalParameters() {
             return additionalParameters;
         }
 
-        public Map<Integer, String> getUserParameters() {
+        Map<Integer, String> getUserParameters() {
             return userParameters;
         }
 
-        public List<Character> getDelimiters() {
+        List<Character> getDelimiters() {
             return delimiters;
         }
     }
 
-    public static boolean verifyMask(String mask) {
+    static boolean verifyMask(String mask) {
         String[] parts = mask.split("%");
         if (parts.length == 1) {
             return false;
@@ -90,7 +90,7 @@ public class MaskHandler {
         return true;
     }
 
-    public static Parameters getMaskParameters(String mask) {
+    static Parameters getMaskParameters(String mask) {
 
         if ((mask.startsWith("«") && mask.endsWith("»")) || (mask.startsWith("\"") && mask.endsWith("\""))) {
             mask = mask.substring(1, mask.length() - 1);
