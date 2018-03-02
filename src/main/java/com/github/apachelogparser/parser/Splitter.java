@@ -8,12 +8,13 @@ import java.util.Map;
 /**
  * Created by maxtar on 2/10/18.
  */
-class Splitter {
+public class Splitter {
 
     private Splitter() {
     }
 
-    static List<String> split(String oneString, List<Character> delimiters, Map<Integer, String> userParams) {
+    // TODO MAKE NON STATIC
+    static List<String> split(String oneString, List<Character> delimiters, Map<Integer, String> userParams, int strNum) throws SplitterFileException {
         List<String> splitted = new ArrayList<>();
         String addedStr = null;
         for (int i = 0; i < delimiters.size(); i++) {
@@ -21,7 +22,11 @@ class Splitter {
             String userParam = userParams.get(i);
 
             if (addedStr != null) {
-                oneString = oneString.substring(addedStr.length() + 1);
+                try {
+                    oneString = oneString.substring(addedStr.length() + 1);
+                } catch (StringIndexOutOfBoundsException e) {
+                    throw new SplitterFileException("The Wrong String Was Found In File. Line #", strNum);
+                }
             }
             if (userParam != null && oneString.contains(userParam)) {
                 oneString = oneString.substring(userParam.length());
@@ -96,5 +101,19 @@ class Splitter {
             }
         }
         return splitted;
+    }
+
+    // TODO MAKE NON STATIC
+    public static class SplitterFileException extends Exception {
+        private int stringNumber;
+
+        public int getStringNumber() {
+            return stringNumber;
+        }
+
+        SplitterFileException(String message, int stringNumber) {
+            super(message);
+            this.stringNumber = stringNumber;
+        }
     }
 }

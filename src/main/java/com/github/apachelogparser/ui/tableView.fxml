@@ -14,11 +14,14 @@
     </padding>
 
     <HBox GridPane.hgrow="ALWAYS" GridPane.columnIndex="0" GridPane.rowIndex="0">
-        <Text fx:id="nameLabel">
-            <font>
-                <Font name="Arial" size="20"/>
-            </font>
-        </Text>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Button text="Return To Menu" onAction="#handleReturnButtonAction" prefWidth="140"/>
+            <Text fx:id="nameLabel">
+                <font>
+                    <Font name="Arial" size="20"/>
+                </font>
+            </Text>
+        </HBox>
         <Region prefWidth="-Infinity" HBox.hgrow="ALWAYS"/>
         <HBox alignment="CENTER_RIGHT">
             <Text text="Search: ">
@@ -33,7 +36,9 @@
     <TableView fx:id="table"
                GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"
                GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
     </TableView>
 
 </GridPane>

@@ -4,11 +4,18 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import main.java.com.github.apachelogparser.ui.Ui;
 
-public class TableViewController {//} implements Initializable {
+import java.awt.*;
+import java.io.IOException;
+
+public class TableViewController {
 
     @FXML
     private TextField filterField;
@@ -54,6 +61,16 @@ public class TableViewController {//} implements Initializable {
             }
             table.setItems(subentries);
         });
+    }
 
+    public void handleReturnButtonAction() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/github/apachelogparser/ui/firstView.fxml"));
+        Parent root = loader.load();
+        UiController controller = loader.getController();
+        Ui.primaryStage.setTitle("Apache Log Parser");
+        GraphicsDevice[] gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+        Ui.primaryStage.setScene(new Scene(root, gd[gd.length - 1].getDisplayMode().getWidth() / 2, 275));
+        Ui.primaryStage.show();
+        controller.fillComboBox();
     }
 }

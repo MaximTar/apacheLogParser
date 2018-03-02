@@ -15,15 +15,17 @@ public class Reader {
     private Reader() {
     }
 
-    public static List<List<String>> readFile(String path, List<Character> delimiters, Map<Integer, String> userParams) {
+    public static List<List<String>> readFile(String path, List<Character> delimiters, Map<Integer, String> userParams) throws Splitter.SplitterFileException {
         List<List<String>> logData = new ArrayList<>();
         try (FileReader fr = new FileReader(path)) {
             BufferedReader br = new BufferedReader(fr);
             String line;
+            int strNum = 0;
             while ((line = br.readLine()) != null) {
+                strNum++;
                 // TODO add line verification
                 if (line.length() > 0) {
-                    logData.add(Splitter.split(line, delimiters, userParams));
+                    logData.add(Splitter.split(line, delimiters, userParams, strNum));
                 }
             }
         } catch (IOException e) {

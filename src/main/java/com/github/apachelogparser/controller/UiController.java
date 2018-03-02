@@ -12,8 +12,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import main.java.com.github.apachelogparser.parser.Reader;
+import main.java.com.github.apachelogparser.parser.Splitter;
 import main.java.com.github.apachelogparser.ui.Ui;
 
+import java.awt.*;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
@@ -103,15 +105,27 @@ public class UiController {
                 MaskHandler.Parameters parameters = MaskHandler.getMaskParameters(selectedLogFormat);
                 List<Character> delimiters = parameters.getDelimiters();
                 Map<Integer, String> userParams = parameters.getUserParameters();
-                List<List<String>> logData = Reader.readFile(filePath, delimiters, userParams);
-                ObservableList<LogString> data = createObservableList(logData, parameters.getParameters());
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/github/apachelogparser/ui/tableView.fxml"));
-                GridPane gridPane = loader.load();
-                TableViewController controller = loader.getController();
-                controller.setLogData(data);
-                controller.getNameLabel().setText("Log file: " + fileName);
-                TableFiller.fillTable(controller, data, parameters);
-                Ui.primaryStage.setScene(new Scene(gridPane));
+                List<List<String>> logData;
+                try {
+                    logData = Reader.readFile(filePath, delimiters, userParams);
+                    ObservableList<LogString> data = createObservableList(logData, parameters.getParameters());
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/github/apachelogparser/ui/tableView.fxml"));
+                    GridPane gridPane = loader.load();
+                    TableViewController controller = loader.getController();
+                    controller.setLogData(data);
+                    controller.getNameLabel().setText("Log file: " + fileName);
+                    TableFiller.fillTable(controller, data, parameters);
+                    GraphicsDevice[] gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+                    double width = gd[gd.length - 1].getDisplayMode().getWidth() / 2;
+                    double height = gd[gd.length - 1].getDisplayMode().getWidth() / 2;
+                    double prefHeight = data.size() * 10 + 200;
+                    if (prefHeight < height) {
+                        height = prefHeight;
+                    }
+                    Ui.primaryStage.setScene(new Scene(gridPane, width, height));
+                } catch (Splitter.SplitterFileException e) {
+                    new AlertHandler(Alert.AlertType.ERROR, e.getMessage() + e.getStringNumber());
+                }
             } else {
                 new AlertHandler(Alert.AlertType.WARNING, "Selected Log Format Is Not Valid!");
             }

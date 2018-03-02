@@ -5,8 +5,8 @@ import javafx.beans.property.SimpleStringProperty;
 /**
  * Created by maxtar on 2/12/18.
  */
-@SuppressWarnings("unused")
-class LogString {
+@SuppressWarnings({"unused", "WeakerAccess"})
+public class LogString {
 
     private LogString() {
 
