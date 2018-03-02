@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import main.java.com.github.apachelogparser.ui.Ui;
 
 import java.awt.*;
 import java.io.IOException;
@@ -64,13 +63,13 @@ public class TableViewController {
     }
 
     public void handleReturnButtonAction() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/github/apachelogparser/ui/firstView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(Main.getFirstViewPath()));
         Parent root = loader.load();
-        UiController controller = loader.getController();
-        Ui.primaryStage.setTitle("Apache Log Parser");
+        FirstViewController controller = loader.getController();
+        Main.getPrimaryStage().setTitle("Apache Log Parser");
         GraphicsDevice[] gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-        Ui.primaryStage.setScene(new Scene(root, gd[gd.length - 1].getDisplayMode().getWidth() / 2, 275));
-        Ui.primaryStage.show();
+        Main.getPrimaryStage().setScene(new Scene(root, gd[gd.length - 1].getDisplayMode().getWidth() / 2, 275));
+        Main.getPrimaryStage().show();
         controller.fillComboBox();
     }
 }

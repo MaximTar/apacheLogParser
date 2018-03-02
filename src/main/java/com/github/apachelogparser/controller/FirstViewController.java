@@ -12,8 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import main.java.com.github.apachelogparser.parser.Reader;
-import main.java.com.github.apachelogparser.parser.Splitter;
-import main.java.com.github.apachelogparser.ui.Ui;
+import main.java.com.github.apachelogparser.parser.SplitterFileException;
 
 import java.awt.*;
 import java.io.*;
@@ -22,7 +21,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class UiController {
+// TODO HANDLE EXCEPTIONS
+@SuppressWarnings("WeakerAccess")
+public class FirstViewController {
     @FXML
     private final FileChooser fileChooser = new FileChooser();
     @FXML
@@ -38,7 +39,7 @@ public class UiController {
 
     @FXML
     protected void handleSelectButtonAction() {
-        File file = fileChooser.showOpenDialog(main.java.com.github.apachelogparser.ui.Ui.primaryStage);
+        File file = fileChooser.showOpenDialog(Main.getPrimaryStage());
         if (file != null) {
             filePath = file.getPath();
             fileName = file.getName();
@@ -109,7 +110,7 @@ public class UiController {
                 try {
                     logData = Reader.readFile(filePath, delimiters, userParams);
                     ObservableList<LogString> data = createObservableList(logData, parameters.getParameters());
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/github/apachelogparser/ui/tableView.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(Main.getTableViewPath()));
                     GridPane gridPane = loader.load();
                     TableViewController controller = loader.getController();
                     controller.setLogData(data);
@@ -122,8 +123,8 @@ public class UiController {
                     if (prefHeight < height) {
                         height = prefHeight;
                     }
-                    Ui.primaryStage.setScene(new Scene(gridPane, width, height));
-                } catch (Splitter.SplitterFileException e) {
+                    Main.getPrimaryStage().setScene(new Scene(gridPane, width, height));
+                } catch (SplitterFileException e) {
                     new AlertHandler(Alert.AlertType.ERROR, e.getMessage() + e.getStringNumber());
                 }
             } else {

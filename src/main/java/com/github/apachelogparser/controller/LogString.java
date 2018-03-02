@@ -414,8 +414,8 @@ public class LogString {
             return this;
         }
 
-        Builder setTimeInStandartFormat(String timeInStandartFormat) {
-            LogString.this.timeInStandardFormat = new SimpleStringProperty(timeInStandartFormat);
+        Builder setTimeInStandardFormat(String timeInStandardFormat) {
+            LogString.this.timeInStandardFormat = new SimpleStringProperty(timeInStandardFormat);
             return this;
         }
 

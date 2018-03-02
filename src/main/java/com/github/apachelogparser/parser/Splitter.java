@@ -14,25 +14,25 @@ public class Splitter {
     }
 
     // TODO MAKE NON STATIC
-    static List<String> split(String oneString, List<Character> delimiters, Map<Integer, String> userParams, int strNum) throws SplitterFileException {
+    static List<String> split(String line, List<Character> delimiters, Map<Integer, String> userParameters, int lineNumber) throws SplitterFileException {
         List<String> splitted = new ArrayList<>();
-        String addedStr = null;
+        String added = null;
         for (int i = 0; i < delimiters.size(); i++) {
             String delimiter = delimiters.get(i).toString();
-            String userParam = userParams.get(i);
+            String userParameter = userParameters.get(i);
 
-            if (addedStr != null) {
+            if (added != null) {
                 try {
-                    oneString = oneString.substring(addedStr.length() + 1);
+                    line = line.substring(added.length() + 1);
                 } catch (StringIndexOutOfBoundsException e) {
-                    throw new SplitterFileException("The Wrong String Was Found In File. Line #", strNum);
+                    throw new SplitterFileException("The Wrong String Was Found In File. Line #", lineNumber);
                 }
             }
-            if (userParam != null && oneString.contains(userParam)) {
-                oneString = oneString.substring(userParam.length());
+            if (userParameter != null && line.contains(userParameter)) {
+                line = line.substring(userParameter.length());
             }
 
-            String[] parts = oneString.split(delimiter);
+            String[] parts = line.split(delimiter);
             List<String> helper = new ArrayList<>();
             Collections.addAll(helper, parts);
 
@@ -44,13 +44,18 @@ public class Splitter {
             if (!positions.isEmpty()) {
                 helper = concatAndRemove(helper, positions);
             }
+            positions = checkOnCharsIn(helper, '\'', '\'');
+            if (!positions.isEmpty()) {
+                helper = concatAndRemove(helper, positions);
+            }
+
             if (!helper.isEmpty()) {
-                addedStr = helper.get(0);
-                splitted.add(addedStr);
+                added = helper.get(0);
+                splitted.add(added);
                 if (i == delimiters.size() - 1) {
-                    String lastUserParam = userParams.get(i + 1);
-                    if (lastUserParam != null && helper.get(1).contains(lastUserParam)) {
-                        splitted.add(helper.get(1).substring(lastUserParam.length()));
+                    String lastUserParameter = userParameters.get(i + 1);
+                    if (lastUserParameter != null && helper.get(1).contains(lastUserParameter)) {
+                        splitted.add(helper.get(1).substring(lastUserParameter.length()));
                     } else {
                         splitted.add(helper.get(1));
                     }
@@ -61,28 +66,28 @@ public class Splitter {
     }
 
     static private List<Integer> checkOnCharsIn(List<String> parts, char symbolOpen, char symbolClose) {
-        List<Integer> posOfChars = new ArrayList<>();
+        List<Integer> positions = new ArrayList<>();
         for (int i = 0; i < parts.size(); i++) {
             if (parts.get(i).charAt(0) == symbolOpen &&
                     parts.get(i).charAt(parts.get(i).length() - 1) != symbolClose) {
-                posOfChars.add(i);
+                positions.add(i);
                 for (int j = i + 1; j < parts.size(); j++) {
                     if (parts.get(j).charAt(parts.get(j).length() - 1) == symbolClose) {
-                        posOfChars.add(j);
+                        positions.add(j);
                         break;
                     } else if (j == parts.size() - 1) {
-                        posOfChars.remove(posOfChars.size() - 1);
+                        positions.remove(positions.size() - 1);
                     }
                 }
             }
         }
-        return posOfChars;
+        return positions;
     }
 
     static private List<String> concatAndRemove(List<String> splitted, List<Integer> positions) {
-        List<String> newLine = concat(splitted, positions);
-        newLine = remove(newLine, positions);
-        return newLine;
+        List<String> joined = concat(splitted, positions);
+        joined = remove(joined, positions);
+        return joined;
     }
 
     static private List<String> concat(List<String> splitted, List<Integer> positions) {
@@ -101,19 +106,5 @@ public class Splitter {
             }
         }
         return splitted;
-    }
-
-    // TODO MAKE NON STATIC
-    public static class SplitterFileException extends Exception {
-        private int stringNumber;
-
-        public int getStringNumber() {
-            return stringNumber;
-        }
-
-        SplitterFileException(String message, int stringNumber) {
-            super(message);
-            this.stringNumber = stringNumber;
-        }
     }
 }

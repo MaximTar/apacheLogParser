@@ -220,7 +220,7 @@ class MaskHandler {
             builder.setStatus(element.get(MaskHandler.getKeyByValue(maskParams, 's') - 1));
         }
         if (maskParams.containsValue('t')) {
-            builder.setTimeInStandartFormat(element.get(MaskHandler.getKeyByValue(maskParams, 't') - 1));
+            builder.setTimeInStandardFormat(element.get(MaskHandler.getKeyByValue(maskParams, 't') - 1));
         }
 //        if (maskParams.containsValue('t')){ // w Format
 //            builder.setTimeInGivenFormat(element.get(MaskHandler.getKeyByValue(maskParams, 'e') - 1));
