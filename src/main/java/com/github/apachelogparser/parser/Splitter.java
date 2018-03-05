@@ -34,31 +34,29 @@ public final class Splitter {
             }
 
             String[] parts = line.split(String.valueOf(delimiter));
-            List<String> helper = new ArrayList<>();
-            Collections.addAll(helper, parts);
 
-            List<Integer> positions = checkOnCharsIn(helper, '[', ']');
+            List<Integer> positions = checkOnCharsIn(parts, '[', ']');
             if (!positions.isEmpty()) {
-                helper = concatAndRemove(helper, positions);
+                parts = concatAndRemove(parts, positions);
             }
-            positions = checkOnCharsIn(helper, '"', '"');
+            positions = checkOnCharsIn(parts, '"', '"');
             if (!positions.isEmpty()) {
-                helper = concatAndRemove(helper, positions);
+                parts = concatAndRemove(parts, positions);
             }
-            positions = checkOnCharsIn(helper, '\'', '\'');
+            positions = checkOnCharsIn(parts, '\'', '\'');
             if (!positions.isEmpty()) {
-                helper = concatAndRemove(helper, positions);
+                parts = concatAndRemove(parts, positions);
             }
 
-            if (!helper.isEmpty()) {
-                added = helper.get(0);
+            if (parts.length > 0) {
+                added = parts[0];
                 splitted.add(added);
                 if (i == delimiters.size() - 1) {
                     String lastUserParameter = userParameters.get(i + 1);
-                    if (lastUserParameter != null && helper.get(1).contains(lastUserParameter)) {
-                        splitted.add(helper.get(1).substring(lastUserParameter.length()));
+                    if (lastUserParameter != null && parts[1].contains(lastUserParameter)) {
+                        splitted.add(parts[1].substring(lastUserParameter.length()));
                     } else {
-                        splitted.add(helper.get(1));
+                        splitted.add(parts[1]);
                     }
                 }
             }
@@ -66,17 +64,17 @@ public final class Splitter {
         return splitted;
     }
 
-    private static List<Integer> checkOnCharsIn(List<String> parts, char symbolOpen, char symbolClose) {
+    private static List<Integer> checkOnCharsIn(String[] parts, char symbolOpen, char symbolClose) {
         List<Integer> positions = new ArrayList<>();
-        for (int i = 0; i < parts.size(); i++) {
-            if (parts.get(i).charAt(0) == symbolOpen &&
-                    parts.get(i).charAt(parts.get(i).length() - 1) != symbolClose) {
+        for (int i = 0; i < parts.length; i++) {
+            if (parts[i].charAt(0) == symbolOpen &&
+                    parts[i].charAt(parts[i].length() - 1) != symbolClose) {
                 positions.add(i);
-                for (int j = i + 1; j < parts.size(); j++) {
-                    if (parts.get(j).charAt(parts.get(j).length() - 1) == symbolClose) {
+                for (int j = i + 1; j < parts.length; j++) {
+                    if (parts[j].charAt(parts[j].length() - 1) == symbolClose) {
                         positions.add(j);
                         break;
-                    } else if (j == parts.size() - 1) {
+                    } else if (j == parts.length - 1) {
                         positions.remove(positions.size() - 1);
                     }
                 }
@@ -85,8 +83,9 @@ public final class Splitter {
         return positions;
     }
 
-    private static List<String> concatAndRemove(List<String> splitted, List<Integer> positions) {
-        List<String> joined = new ArrayList<>(splitted);
+    private static String[] concatAndRemove(String[] parts, List<Integer> positions) {
+        List<String> joined = new ArrayList<>();
+        Collections.addAll(joined, parts);
         for (int k = 0; k < positions.size(); k += 2) {
             for (int i = positions.get(k) + 1; i <= positions.get(k + 1); i++) {
                 joined.set(positions.get(k), joined.get(positions.get(k)) + " " + joined.get(i));
@@ -97,6 +96,6 @@ public final class Splitter {
                 joined.remove(i);
             }
         }
-        return joined;
+        return joined.toArray(new String[0]);
     }
 }
