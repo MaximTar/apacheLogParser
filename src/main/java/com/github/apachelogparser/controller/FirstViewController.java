@@ -16,14 +16,25 @@ import main.java.com.github.apachelogparser.parser.SplitterFileException;
 
 import java.awt.*;
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 // TODO HANDLE EXCEPTIONS
 @SuppressWarnings("WeakerAccess")
 public class FirstViewController {
+    private final static Logger LOGGER = Logger.getLogger(FirstViewController.class.getName());
+    static {
+        LOGGER.setUseParentHandlers(false);
+        FileHandler fh = Main.getFileHandler();
+        LOGGER.addHandler(fh);
+    }
+
     @FXML
     private final FileChooser fileChooser = new FileChooser();
     @FXML
@@ -34,8 +45,8 @@ public class FirstViewController {
     private Label selectedFile;
     private String filePath;
     private String fileName;
-    private String savedLogFormatsFileName = "savedLogFormats";
-    private String commonLogFormat = "%h %l %u %t \"%r\" %>s %b";
+    private final String savedLogFormatsFileName = "savedLogFormats";
+    private final String commonLogFormat = "%h %l %u %t \"%r\" %>s %b";
 
     @FXML
     protected void handleSelectButtonAction() {
@@ -45,53 +56,73 @@ public class FirstViewController {
             fileName = file.getName();
             selectedFile.setText(filePath);
         } else {
-            new AlertHandler(Alert.AlertType.WARNING, "Selected File Is Null!");
+            LOGGER.log(Level.WARNING, "HELLO");
+            new AlertHandler(Alert.AlertType.WARNING, "Selected file is null!");
         }
     }
 
     public void handleRemoveButtonAction() {
         String selectedItem = logFormatComboBox.getSelectionModel().getSelectedItem();
         if (selectedItem.equals(commonLogFormat)) {
-            new AlertHandler(Alert.AlertType.INFORMATION, "Could Not Delete Common Log Format.");
+            new AlertHandler(Alert.AlertType.INFORMATION, "Could not delete Common Log Format.");
         } else {
             File inputFile = new File(savedLogFormatsFileName);
             File tempFile = new File("temp");
             try (FileReader fr = new FileReader(inputFile)) {
                 BufferedReader reader = new BufferedReader(fr);
-                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-                String currentLine;
-                boolean deletedFlag = false;
-                while ((currentLine = reader.readLine()) != null) {
-                    String trimmedLine = currentLine.trim();
-                    if (trimmedLine.equals(selectedItem) && !deletedFlag) {
-                        deletedFlag = true;
-                        continue;
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+                    String currentLine;
+                    boolean deletedFlag = false;
+                    while ((currentLine = reader.readLine()) != null) {
+                        String trimmedLine = currentLine.trim();
+                        if (trimmedLine.equals(selectedItem) && !deletedFlag) {
+                            deletedFlag = true;
+                            continue;
+                        }
+                        writer.write(currentLine + System.getProperty("line.separator"));
                     }
-                    writer.write(currentLine + System.getProperty("line.separator"));
+                    writer.close();
+                    reader.close();
+                    //noinspection ResultOfMethodCallIgnored
+                    inputFile.delete();
+                    //noinspection ResultOfMethodCallIgnored
+                    tempFile.renameTo(inputFile);
+                    fillComboBox();
+                } catch (IOException e) {
+                    LOGGER.log(Level.WARNING, "IOException while creating new BufferedWriter. StackTrace: "
+                            + Arrays.toString(e.getStackTrace()));
+                    new AlertHandler(Alert.AlertType.ERROR, "Program could not write to the temporary file.\n" +
+                            "Grant the rights to the program so that it can access the filesystem.");
                 }
-                writer.close();
-                reader.close();
-                //noinspection ResultOfMethodCallIgnored
-                inputFile.delete();
-                //noinspection ResultOfMethodCallIgnored
-                tempFile.renameTo(inputFile);
-                fillComboBox();
+            } catch (FileNotFoundException e) {
+                LOGGER.log(Level.WARNING, "FileNotFound while creating new FileReader. StackTrace: "
+                        + Arrays.toString(e.getStackTrace()));
+                new AlertHandler(Alert.AlertType.ERROR, "Program could not access the file with log formats.\n" +
+                        "Grant the rights to the program so that it can access the filesystem.");
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "IOException from auto-closable resource. StackTrace: "
+                        + Arrays.toString(e.getStackTrace()));
+                new AlertHandler(Alert.AlertType.ERROR, "Program could not close resource.\n" +
+                        "Grant the rights to the program so that it can access the filesystem.");
             }
         }
     }
 
-    public void handleAddButtonAction() throws IOException {
+    public void handleAddButtonAction() {
         if (MaskHandler.verifyMask(newLogFormatTextField.getText())) {
             // TODO CHECK IF NEW FORMAT ALREADY IN FILE
-            try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(savedLogFormatsFileName, true)))) {
+            try (FileWriter fw = new FileWriter(savedLogFormatsFileName, true)) {
+                BufferedWriter bw = new BufferedWriter(fw);
+                PrintWriter out = new PrintWriter(bw);
                 out.println(newLogFormatTextField.getText());
+                fillComboBox();
+                newLogFormatTextField.clear();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "IOException while creating new FileWriter. StackTrace: "
+                        + Arrays.toString(e.getStackTrace()));
+                new AlertHandler(Alert.AlertType.ERROR, "Program could not write to the file that contains saved log formats.\n" +
+                        "Grant the rights to the program so that it can access the filesystem.");
             }
-            fillComboBox();
-            newLogFormatTextField.clear();
         } else {
             new AlertHandler(Alert.AlertType.WARNING, "Your Log Format Is Not Valid!");
         }
@@ -133,12 +164,19 @@ public class FirstViewController {
         }
     }
 
-    public void fillComboBox() throws IOException {
+    public void fillComboBox() {
         logFormatComboBox.getItems().clear();
         File savedLogFormatsFile = new File(savedLogFormatsFileName);
         boolean savedLogFormatsFileExists = savedLogFormatsFile.exists();
         if (!savedLogFormatsFileExists) {
-            savedLogFormatsFileExists = savedLogFormatsFile.createNewFile();
+            try {
+                savedLogFormatsFileExists = savedLogFormatsFile.createNewFile();
+            } catch (IOException e) {
+                LOGGER.log(Level.WARNING, "IOException while creating new savedLogFormatsFile. StackTrace: "
+                        + Arrays.toString(e.getStackTrace()));
+                new AlertHandler(Alert.AlertType.ERROR, "Program could not create file that will contain saved log formats.\n" +
+                        "Grant the rights to the program so that it can access the filesystem.");
+            }
         }
         if (savedLogFormatsFileExists) {
             List<String> logFormats = Reader.readLogFormats(savedLogFormatsFileName);

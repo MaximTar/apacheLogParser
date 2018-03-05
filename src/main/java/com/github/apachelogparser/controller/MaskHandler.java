@@ -8,10 +8,10 @@ import java.util.*;
 class MaskHandler {
 
     static class Parameters {
-        private Map<Integer, Character> parameters;
-        private Map<Integer, String> additionalParameters;
-        private Map<Integer, String> userParameters;
-        private List<Character> delimiters;
+        private final Map<Integer, Character> parameters;
+        private final Map<Integer, String> additionalParameters;
+        private final Map<Integer, String> userParameters;
+        private final List<Character> delimiters;
 
         Parameters(Map<Integer, Character> params, Map<Integer, String> additionalParams,
                    Map<Integer, String> userParams, List<Character> delimiters) {

@@ -48,7 +48,7 @@ public class TableViewController {
             String value = newValue.toLowerCase();
             ObservableList<LogString> subentries = FXCollections.observableArrayList();
 
-            long count = table.getColumns().stream().count();
+            long count = (long) table.getColumns().size();
             for (int i = 0; i < table.getItems().size(); i++) {
                 for (int j = 0; j < count; j++) {
                     String entry = "" + table.getColumns().get(j).getCellData(i);

@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by maxtar on 2/10/18.
  */
-public class Splitter {
+public final class Splitter {
 
     private Splitter() {
     }
@@ -25,7 +25,7 @@ public class Splitter {
                 try {
                     line = line.substring(added.length() + 1);
                 } catch (StringIndexOutOfBoundsException e) {
-                    throw new SplitterFileException("The Wrong String Was Found In File. Line #", lineNumber);
+                    throw new SplitterFileException(lineNumber);
                 }
             }
             if (userParameter != null && line.contains(userParameter)) {

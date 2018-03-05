@@ -36,7 +36,7 @@ class TableFiller {
 
     private static Map<Integer, TableColumn<LogString, String>> createTableColumnList
             (Map<Integer, Character> maskParams, Map<Integer, String> maskAdditionalParams) {
-
+        // TODO FINISH METHOD
         Map<Integer, TableColumn<LogString, String>> tableColumnList = new HashMap<>();
         if (maskParams.containsValue('a')) {
             int key = MaskHandler.getKeyByValue(maskParams, 'a');
@@ -273,7 +273,7 @@ class TableFiller {
             tableColumnList.put(MaskHandler.getKeyByValue(maskParams, 't'), timeInStandardFormatCol);
         }
 //        if (maskParams.containsValue('t')){ // w Format
-//        TableColumn<LogString, String> timeInGivenFormatCol = new TableColumn<>("The time, in the form\ngiven by format");
+//        TableColumn<LogString, String> timeInGivenFormatCol = new TableColumn<>("The time, in the form\n given by format");
 //        }
         if (maskParams.containsValue('T')) {
             int key = MaskHandler.getKeyByValue(maskParams, 'T');
