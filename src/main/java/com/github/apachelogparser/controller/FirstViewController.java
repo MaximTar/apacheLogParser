@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-// TODO HANDLE EXCEPTIONS
 @SuppressWarnings("WeakerAccess")
 public class FirstViewController {
     private final static Logger LOGGER = Logger.getLogger(FirstViewController.class.getName());

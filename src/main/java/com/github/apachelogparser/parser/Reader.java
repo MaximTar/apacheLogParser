@@ -40,7 +40,7 @@ public final class Reader {
             while ((line = br.readLine()) != null) {
                 lineNumber++;
                 if (line.length() > 0) {
-                    logData.add(Splitter.split(line, delimiters, userParams, lineNumber));
+                    logData.add(new Splitter(line).split(delimiters, userParams, lineNumber));
                 }
             }
         } catch (IOException e) {

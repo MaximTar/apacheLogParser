@@ -22,6 +22,7 @@ public class Main extends Application {
     private static FileHandler fileHandler;
     private final static Logger LOGGER = Logger.getLogger(Main.class.getName());
 
+    //TODO MAYBE PUT IT INTO SEPARATE CLASS LOGGER?
     static {
         try {
             fileHandler = new FileHandler("log.log");

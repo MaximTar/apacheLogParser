@@ -9,16 +9,17 @@ import java.util.Map;
  * Created by maxtar on 2/10/18.
  */
 public final class Splitter {
+    private String line;
 
-    private Splitter() {
+    Splitter(String line) {
+        this.line = line;
     }
 
-    // TODO MAKE NON STATIC
-    static List<String> split(String line, List<Character> delimiters, Map<Integer, String> userParameters, int lineNumber) throws SplitterFileException {
+    public List<String> split(List<Character> delimiters, Map<Integer, String> userParameters, int lineNumber) throws SplitterFileException {
         List<String> splitted = new ArrayList<>();
         String added = null;
         for (int i = 0; i < delimiters.size(); i++) {
-            String delimiter = delimiters.get(i).toString();
+            Character delimiter = delimiters.get(i);
             String userParameter = userParameters.get(i);
 
             if (added != null) {
@@ -32,7 +33,7 @@ public final class Splitter {
                 line = line.substring(userParameter.length());
             }
 
-            String[] parts = line.split(delimiter);
+            String[] parts = line.split(String.valueOf(delimiter));
             List<String> helper = new ArrayList<>();
             Collections.addAll(helper, parts);
 
@@ -65,7 +66,7 @@ public final class Splitter {
         return splitted;
     }
 
-    static private List<Integer> checkOnCharsIn(List<String> parts, char symbolOpen, char symbolClose) {
+    private static List<Integer> checkOnCharsIn(List<String> parts, char symbolOpen, char symbolClose) {
         List<Integer> positions = new ArrayList<>();
         for (int i = 0; i < parts.size(); i++) {
             if (parts.get(i).charAt(0) == symbolOpen &&
@@ -84,27 +85,18 @@ public final class Splitter {
         return positions;
     }
 
-    static private List<String> concatAndRemove(List<String> splitted, List<Integer> positions) {
-        List<String> joined = concat(splitted, positions);
-        joined = remove(joined, positions);
-        return joined;
-    }
-
-    static private List<String> concat(List<String> splitted, List<Integer> positions) {
+    private static List<String> concatAndRemove(List<String> splitted, List<Integer> positions) {
+        List<String> joined = new ArrayList<>(splitted);
         for (int k = 0; k < positions.size(); k += 2) {
             for (int i = positions.get(k) + 1; i <= positions.get(k + 1); i++) {
-                splitted.set(positions.get(k), splitted.get(positions.get(k)) + " " + splitted.get(i));
+                joined.set(positions.get(k), joined.get(positions.get(k)) + " " + joined.get(i));
             }
         }
-        return splitted;
-    }
-
-    static private List<String> remove(List<String> splitted, List<Integer> positions) {
         for (int k = positions.size() - 1; k > 0; k -= 2) {
             for (int i = positions.get(k); i > positions.get(k - 1); i--) {
-                splitted.remove(i);
+                joined.remove(i);
             }
         }
-        return splitted;
+        return joined;
     }
 }
