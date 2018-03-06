@@ -16,10 +16,8 @@ import main.java.com.github.apachelogparser.parser.SplitterFileException;
 
 import java.awt.*;
 import java.io.*;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +26,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("WeakerAccess")
 public class FirstViewController {
     private final static Logger LOGGER = Logger.getLogger(FirstViewController.class.getName());
+
     static {
         LOGGER.setUseParentHandlers(false);
         FileHandler fh = Main.getFileHandler();
@@ -109,17 +108,39 @@ public class FirstViewController {
 
     public void handleAddButtonAction() {
         if (MaskHandler.verifyMask(newLogFormatTextField.getText())) {
-            // TODO CHECK IF NEW FORMAT ALREADY IN FILE
+            String newLine = newLogFormatTextField.getText();
             try (FileWriter fw = new FileWriter(savedLogFormatsFileName, true)) {
-                BufferedWriter bw = new BufferedWriter(fw);
-                PrintWriter out = new PrintWriter(bw);
-                out.println(newLogFormatTextField.getText());
-                fillComboBox();
-                newLogFormatTextField.clear();
+                File file = new File(savedLogFormatsFileName);
+                try (Scanner scanner = new Scanner(file)) {
+                    boolean equalFlag = false;
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        if (Objects.equals(line, newLine)) {
+                            equalFlag = true;
+                        }
+                    }
+                    if (!equalFlag) {
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        PrintWriter out = new PrintWriter(bw);
+                        out.println(newLine);
+                        fillComboBox();
+                        newLogFormatTextField.clear();
+                    } else {
+                        new AlertHandler(Alert.AlertType.INFORMATION,
+                                "An added log format is already contained in the list.");
+                    }
+                } catch (FileNotFoundException e) {
+                    LOGGER.log(Level.WARNING, "FileNotFoundException while creating new Scanner. StackTrace: "
+                            + Arrays.toString(e.getStackTrace()));
+                    new AlertHandler(Alert.AlertType.ERROR,
+                            "Program could not read the file that contains saved log formats.\n" +
+                            "Grant the rights to the program so that it can access the filesystem.");
+                }
             } catch (IOException e) {
                 LOGGER.log(Level.WARNING, "IOException while creating new FileWriter. StackTrace: "
                         + Arrays.toString(e.getStackTrace()));
-                new AlertHandler(Alert.AlertType.ERROR, "Program could not write to the file that contains saved log formats.\n" +
+                new AlertHandler(Alert.AlertType.ERROR,
+                        "Program could not write to the file that contains saved log formats.\n" +
                         "Grant the rights to the program so that it can access the filesystem.");
             }
         } else {
@@ -173,7 +194,8 @@ public class FirstViewController {
             } catch (IOException e) {
                 LOGGER.log(Level.WARNING, "IOException while creating new savedLogFormatsFile. StackTrace: "
                         + Arrays.toString(e.getStackTrace()));
-                new AlertHandler(Alert.AlertType.ERROR, "Program could not create file that will contain saved log formats.\n" +
+                new AlertHandler(Alert.AlertType.ERROR,
+                        "Program could not create file that will contain saved log formats.\n" +
                         "Grant the rights to the program so that it can access the filesystem.");
             }
         }
