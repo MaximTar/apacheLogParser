@@ -14,10 +14,8 @@ import javafx.stage.FileChooser;
 import main.java.com.github.apachelogparser.parser.Reader;
 import main.java.com.github.apachelogparser.parser.SplitterFileException;
 
-import java.awt.*;
 import java.io.*;
 import java.util.*;
-import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,8 +32,6 @@ public class FirstViewController {
     }
 
     @FXML
-    private final FileChooser fileChooser = new FileChooser();
-    @FXML
     private TextField newLogFormatTextField;
     @FXML
     private ComboBox<String> logFormatComboBox;
@@ -48,14 +44,11 @@ public class FirstViewController {
 
     @FXML
     protected void handleSelectButtonAction() {
-        File file = fileChooser.showOpenDialog(Main.getPrimaryStage());
+        File file = new FileChooser().showOpenDialog(Main.getPrimaryStage());
         if (file != null) {
             filePath = file.getPath();
             fileName = file.getName();
             selectedFile.setText(filePath);
-        } else {
-            LOGGER.log(Level.WARNING, "HELLO");
-            new AlertHandler(Alert.AlertType.WARNING, "Selected file is null!");
         }
     }
 
@@ -167,14 +160,12 @@ public class FirstViewController {
                     controller.setLogData(data);
                     controller.getNameLabel().setText("Log file: " + fileName);
                     TableFiller.fillTable(controller, data, parameters);
-                    GraphicsDevice[] gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-                    double width = gd[gd.length - 1].getDisplayMode().getWidth() / 2;
-                    double height = gd[gd.length - 1].getDisplayMode().getWidth() / 2;
-                    double prefHeight = data.size() * 10 + 200;
+                    double height = Main.getTableViewHeight();
+                    double prefHeight = data.size() * 10 + 250;
                     if (prefHeight < height) {
                         height = prefHeight;
                     }
-                    Main.getPrimaryStage().setScene(new Scene(gridPane, width, height));
+                    Main.getPrimaryStage().setScene(new Scene(gridPane, Main.getTableViewWidth(), height));
                 } catch (SplitterFileException e) {
                     new AlertHandler(Alert.AlertType.ERROR, e.getMessage() + e.getStringNumber());
                 }

@@ -297,6 +297,103 @@ public class LogString {
     private SimpleStringProperty bytesReceived = new SimpleStringProperty();
     private SimpleStringProperty bytesSent = new SimpleStringProperty();
 
+    public static String buildCsvLine(LogString logString) {
+        StringBuilder sb = new StringBuilder();
+        if (logString.getRemoteIp() != null) {
+            sb.append(logString.getRemoteIp()).append(",");
+        }
+        if (logString.getSizeOfResponseInBytes() != null) {
+            sb.append(logString.getSizeOfResponseInBytes()).append(",");
+        }
+        if (logString.getSizeOfResponseInBytesInClf() != null) {
+            sb.append(logString.getSizeOfResponseInBytesInClf()).append(",");
+        }
+        if (logString.getContentsOfCookie() != null) {
+            sb.append(logString.getContentsOfCookie()).append(",");
+        }
+        if (logString.getTimeToServeRequest() != null) {
+            sb.append(logString.getTimeToServeRequest()).append(",");
+        }
+        if (logString.getContentsOfEnvironmentVar() != null) {
+            sb.append(logString.getContentsOfEnvironmentVar()).append(",");
+        }
+        if (logString.getFilename() != null) {
+            sb.append(logString.getFilename()).append(",");
+        }
+        if (logString.getRemoteHost() != null) {
+            sb.append(logString.getRemoteHost()).append(",");
+        }
+        if (logString.getRequestProtocol() != null) {
+            sb.append(logString.getRequestProtocol()).append(",");
+        }
+        if (logString.getContentsOfHeaderInRequest() != null) {
+            sb.append(logString.getContentsOfHeaderInRequest()).append(",");
+        }
+        if (logString.getRemoteLogName() != null) {
+            sb.append(logString.getRemoteLogName()).append(",");
+        }
+        if (logString.getRequestMethod() != null) {
+            sb.append(logString.getRequestMethod()).append(",");
+        }
+        if (logString.getContentsOfNote() != null) {
+            sb.append(logString.getContentsOfNote()).append(",");
+        }
+        if (logString.getContentsOfHeaderInReply() != null) {
+            sb.append(logString.getContentsOfHeaderInReply()).append(",");
+        }
+        if (logString.getCanonicalPort() != null) {
+            sb.append(logString.getCanonicalPort()).append(",");
+        }
+        if (logString.getProcessIdOfChild() != null) {
+            sb.append(logString.getProcessIdOfChild()).append(",");
+        }
+        if (logString.getProcessIdOfThreadOfChild() != null) {
+            sb.append(logString.getProcessIdOfThreadOfChild()).append(",");
+        }
+        if (logString.getQueryString() != null) {
+            sb.append(logString.getQueryString()).append(",");
+        }
+        if (logString.getFirstLineOfRequest() != null) {
+            sb.append(logString.getFirstLineOfRequest()).append(",");
+        }
+        if (logString.getStatus() != null) {
+            sb.append(logString.getStatus()).append(",");
+        }
+        if (logString.getTimeInStandardFormat() != null) {
+            sb.append(logString.getTimeInStandardFormat()).append(",");
+        }
+        if (logString.getTimeInGivenFormat() != null) {
+            sb.append(logString.getTimeInGivenFormat()).append(",");
+        }
+        if (logString.getTimeTakenToServe() != null) {
+            sb.append(logString.getTimeTakenToServe()).append(",");
+        }
+        if (logString.getRemoteUser() != null) {
+            sb.append(logString.getRemoteUser()).append(",");
+        }
+        if (logString.getUrlPathRequested() != null) {
+            sb.append(logString.getUrlPathRequested()).append(",");
+        }
+        if (logString.getCanonicalServerName() != null) {
+            sb.append(logString.getCanonicalServerName()).append(",");
+        }
+        if (logString.getServerName() != null) {
+            sb.append(logString.getServerName()).append(",");
+        }
+        if (logString.getConnectionStatus() != null) {
+            sb.append(logString.getConnectionStatus()).append(",");
+        }
+        if (logString.getBytesReceived() != null) {
+            sb.append(logString.getBytesReceived()).append(",");
+        }
+        if (logString.getBytesSent() != null) {
+            sb.append(logString.getBytesSent()).append(",");
+        }
+        sb.append("\n");
+
+        return sb.toString();
+    }
+
     @SuppressWarnings("UnusedReturnValue")
     class Builder {
 

@@ -7,12 +7,21 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TableViewController {
 
@@ -23,6 +32,13 @@ public class TableViewController {
     @FXML
     private TableView<LogString> table;
     private ObservableList<LogString> logData = FXCollections.observableArrayList();
+    private final static Logger LOGGER = Logger.getLogger(FirstViewController.class.getName());
+
+    static {
+        LOGGER.setUseParentHandlers(false);
+        FileHandler fh = Main.getFileHandler();
+        LOGGER.addHandler(fh);
+    }
 
     public TableViewController() {
     }
@@ -71,5 +87,35 @@ public class TableViewController {
         Main.getPrimaryStage().setScene(new Scene(root, gd[gd.length - 1].getDisplayMode().getWidth() / 2, 275));
         Main.getPrimaryStage().show();
         controller.fillComboBox();
+    }
+
+    public void handleExportButtonAction() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export log to CSV");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv"));
+        fileChooser.setInitialFileName("*.csv");
+        File file = fileChooser.showSaveDialog(Main.getPrimaryStage());
+        if (file != null) {
+            if (!file.getName().contains(".")) {
+                file = new File(file.getAbsolutePath() + ".csv");
+            } else {
+                new AlertHandler(Alert.AlertType.WARNING, file.getName() + " has no valid file-extension.");
+            }
+            if (file.getName().endsWith(".csv")) {
+                try (FileWriter fw = new FileWriter(file)) {
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    for (LogString logString : logData) {
+                        String line = LogString.buildCsvLine(logString);
+                        bw.write(line);
+                    }
+                    bw.close();
+                } catch (IOException e) {
+                    LOGGER.log(Level.WARNING, "IOException while creating new FileWriter. StackTrace: "
+                            + Arrays.toString(e.getStackTrace()));
+                    new AlertHandler(Alert.AlertType.ERROR, "Program could not save file.\n" +
+                            "Grant the rights to the program so that it can access the filesystem.");
+                }
+            }
+        }
     }
 }

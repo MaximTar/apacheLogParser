@@ -89,4 +89,12 @@ public class Main extends Application {
     public static double getFirstViewHeight() {
         return 275.;
     }
+
+    public static double getTableViewWidth() {
+        return Screen.getPrimary().getVisualBounds().getWidth() / 2;
+    }
+
+    public static double getTableViewHeight() {
+        return Screen.getPrimary().getVisualBounds().getHeight() / 2;
+    }
 }

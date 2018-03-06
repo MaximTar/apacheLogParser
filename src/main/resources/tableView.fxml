@@ -15,7 +15,6 @@
 
     <HBox GridPane.hgrow="ALWAYS" GridPane.columnIndex="0" GridPane.rowIndex="0">
         <HBox alignment="CENTER_LEFT" spacing="10">
-            <Button text="Return To Menu" onAction="#handleReturnButtonAction" prefWidth="140"/>
             <Text fx:id="nameLabel">
                 <font>
                     <Font name="Arial" size="20"/>
@@ -40,5 +39,11 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
     </TableView>
+
+    <HBox GridPane.hgrow="ALWAYS" GridPane.columnIndex="0" GridPane.rowIndex="2">
+        <Button text="Return to menu" onAction="#handleReturnButtonAction" prefWidth="140"/>
+        <Region prefWidth="-Infinity" HBox.hgrow="ALWAYS"/>
+        <Button text="Export to CSV" onAction="#handleExportButtonAction" prefWidth="140"/>
+    </HBox>
 
 </GridPane>
