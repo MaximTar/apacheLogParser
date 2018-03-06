@@ -42,6 +42,8 @@ public class FirstViewController {
     private final String savedLogFormatsFileName = "savedLogFormats";
     private final String commonLogFormat = "%h %l %u %t \"%r\" %>s %b";
 
+    private static List<List<String>> logData;
+
     @FXML
     protected void handleSelectButtonAction() {
         File file = new FileChooser().showOpenDialog(Main.getPrimaryStage());
@@ -150,7 +152,6 @@ public class FirstViewController {
                 MaskHandler.Parameters parameters = MaskHandler.getMaskParameters(selectedLogFormat);
                 List<Character> delimiters = parameters.getDelimiters();
                 Map<Integer, String> userParams = parameters.getUserParameters();
-                List<List<String>> logData;
                 try {
                     logData = Reader.readFile(filePath, delimiters, userParams);
                     ObservableList<LogString> data = createObservableList(logData, parameters.getParameters());
@@ -205,5 +206,9 @@ public class FirstViewController {
         ObservableList<LogString> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.addAll(data.stream().map(element -> MaskHandler.buildLogString(maskParams, element)).collect(Collectors.toList()));
         return observableArrayList;
+    }
+
+    public static List<List<String>> getLogData() {
+        return logData;
     }
 }

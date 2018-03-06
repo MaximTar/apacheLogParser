@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -98,15 +99,19 @@ public class TableViewController {
         if (file != null) {
             if (!file.getName().contains(".")) {
                 file = new File(file.getAbsolutePath() + ".csv");
-            } else {
-                new AlertHandler(Alert.AlertType.WARNING, file.getName() + " has no valid file-extension.");
             }
-            if (file.getName().endsWith(".csv")) {
+            if (!file.getName().endsWith(".csv")) {
+                new AlertHandler(Alert.AlertType.WARNING, file.getName() + " has no valid file-extension.");
+            } else {
                 try (FileWriter fw = new FileWriter(file)) {
                     BufferedWriter bw = new BufferedWriter(fw);
-                    for (LogString logString : logData) {
-                        String line = LogString.buildCsvLine(logString);
-                        bw.write(line);
+                    for (List<String> logString : FirstViewController.getLogData()) {
+                        StringBuilder sb = new StringBuilder();
+                        for (String element : logString) {
+                            sb.append(element).append(",");
+                        }
+                        sb.append("\n");
+                        bw.write(sb.toString());
                     }
                     bw.close();
                 } catch (IOException e) {
