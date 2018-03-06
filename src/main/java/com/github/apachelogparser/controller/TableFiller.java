@@ -36,7 +36,7 @@ class TableFiller {
 
     private static Map<Integer, TableColumn<LogString, String>> createTableColumnList
             (Map<Integer, Character> maskParams, Map<Integer, String> maskAdditionalParams) {
-        // TODO FINISH METHOD
+        // TODO update to latest version
         Map<Integer, TableColumn<LogString, String>> tableColumnList = new HashMap<>();
         if (maskParams.containsValue('a')) {
             int key = MaskHandler.getKeyByValue(maskParams, 'a');
@@ -226,7 +226,7 @@ class TableFiller {
             tableColumnList.put(MaskHandler.getKeyByValue(maskParams, 'P'), processIdOfChildCol);
         }
 //            if (maskParams.containsValue('P')) { // w Format
-//        TableColumn<LogString, String> processIdOfThreadOfChildCol = new TableColumn<>("The process ID\nor thread id of the child");
+//        TableColumn<LogString, String> processIdOfThreadOfChildCol = new TableColumn<>("The process ID\nor thread ID of the child");
 //            }
         if (maskParams.containsValue('q')) {
             int key = MaskHandler.getKeyByValue(maskParams, 'q');

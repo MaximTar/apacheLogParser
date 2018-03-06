@@ -156,6 +156,7 @@ class MaskHandler {
 
     static LogString buildLogString(Map<Integer, Character> maskParams, List<String> element) {
         LogString.Builder builder = LogString.newBuilder();
+        // TODO update to latest version
         if (maskParams.containsValue('a')) {
             builder.setRemoteIp(element.get(MaskHandler.getKeyByValue(maskParams, 'a') - 1));
         }

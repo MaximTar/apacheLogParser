@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class LogString {
-
+    // TODO update to latest version
     private LogString() {
 
     }
